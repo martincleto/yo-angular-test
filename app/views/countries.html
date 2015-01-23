@@ -1,0 +1,29 @@
+<div class="countries-view">
+
+	<div class="row">
+		
+		<div class="col-xs-12 col-md-4">
+
+			<p ng-show="loading">Loading countries...</p>
+			<label for="countriesSel" ng-hide="loading">Select a country</label>
+			<select name="countriesSel" id="countriesSel" ng-model="selectedCountry" ng-options="country.name for country in countries" ng-change="showCountry()" ng-hide="loading">
+			</select>
+			
+		</div>
+
+		<div class="col-xs-12 col-md-8">
+			<map zoom="2" 
+			  center="[36.0742793,-26.5950367]" 
+			  disable-double-click-zoom="true"
+			  dragging-cursor="move"
+			  keyboard-shortcuts="false"
+			  max-zoom="12"
+			  min-zoom="2"
+			  tilt="45"
+			  map-type-id="TERRAIN">
+			</map>			
+		</div>
+		
+	</div>
+
+</div>

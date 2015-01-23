@@ -1,0 +1,19 @@
+<div class="data-visualisation-view">
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<label for="criteriaSel" ng-hide="loading">Select a criteria:</label>
+			<select name="criteriaSel" id="criteriaSel" ng-model="selectedCriteria" ng-change="showChart()">
+				<option value="population">The most populated countries</option>
+				<option value="area">The largest countries</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<div d3-bars data="graphData" selected-criteria="{{selectedCriteria}}"></div>
+		</div>
+	</div>
+
+</div>

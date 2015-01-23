@@ -1,0 +1,57 @@
+<div class="edit-nav-view">
+	<nav class="navbar navbar-fixed-top">
+	  <div class="container">
+	    <div id="navbar" class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav">
+	        <li ng-repeat="navItem in navItems">
+	          <a href="{{navItem.url}}">{{navItem.name}}</a>
+	        <li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<h4>Edit Navigation bar</h4>
+			<form action="" name="editNavForm" class="form-inline">
+			  
+			  <ul>
+			    <li ng-repeat="navItem in navItems">
+			      {{navItem.name}}
+			      <button type="button" ng-click="removeItem($index)" class="btn btn-danger">
+			        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove
+			      </button>
+			    </li>
+			  </ul>
+
+			  <p ng-show="showErrors.duplicated">
+			    The item already exists!
+			  </p>
+
+			  <p ng-class="{'has-error': showErrors.required}">
+			    <label for="item-name" class="control-label">Item Name:</label>
+			    <input type="text" id="item-name" name="itemName" ng-model="newNavItem.name" class="form-control" required />
+			    <span class="error" ng-show="showErrors.required">Required!</span>
+			  </p>
+
+			  <p ng-class="{'has-error': showErrors.required}">
+			    <label for="item-url" class="control-label">Item URL:</label>
+			    <input type="text" id="item-url" name="itemUrl" ng-model="newNavItem.url" class="form-control" required />
+			    <span class="error" ng-show="showErrors.required">Required!</span> 
+			  </p>
+
+			  <p>
+				<input type="button" value="Add Navigation Item" ng-click="addItem();" class="btn btn-primary" />
+			  </p>
+
+			  <p>
+			  	<button type="button" ng-click="save();" class="btn btn-success">
+			  	  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Save
+			  	</button>
+			  </p>
+
+			</form>
+		</div>
+	</div>
+</div>
