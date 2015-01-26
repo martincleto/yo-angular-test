@@ -19,11 +19,23 @@ angular.module('yoAngularTestApp')
   	$scope.loading = true;
 
 
-  	if (angular.equals({}, $localstorage.getObject('countries'))) {
-  		dataCountriesLoaded = $http.get('http://restcountries.eu/rest/v1/all').success(function(response){
-	        $scope.countries = response;
-	        $localstorage.setObject('countries',$scope.countries);
-	    });
+    if (angular.equals({}, $localstorage.getObject('countries'))) {
+      oboe('http://restcountries.eu/rest/v1/all')
+        .node('{name capital area population latlng}',function(countryNode){
+          return new Country(
+            countryNode.name,
+            countryNode.capital,
+            countryNode.area,
+            countryNode.population,
+            countryNode.latlng
+          );
+        })
+        .done(function(parsedJson){
+          $scope.countries = parsedJson;
+          $localstorage.setObject('countries',$scope.countries);
+          dataCountriesLoaded.resolve();
+
+        });
   	}
   	else {
   		$scope.countries = $localstorage.getObject('countries');
@@ -35,11 +47,19 @@ angular.module('yoAngularTestApp')
     	mapInitialized.resolve();
     });
 
-    $q.all([dataCountriesLoaded,mapInitialized]).then(function(){
+    $q.all([dataCountriesLoaded.promise,mapInitialized.promise]).then(function(){
     	$scope.selectedCountry = $scope.countries[0];
     	$scope.loading = false;
     	$scope.showCountry();
     });
+
+    function Country(name, capital, area, population, latlng){
+      this.name = name;
+      this.capital = capital;
+      this.area = area;
+      this.population = population;
+      this.latlng = latlng;
+    }
 
     $scope.showCountry = function(){
 
@@ -75,13 +95,13 @@ angular.module('yoAngularTestApp')
     	infoWindowContent += '<li>Capital: '+ $scope.selectedCountry.capital +'</li><li>Population: '+ $scope.selectedCountry.population +'</li>';
     	infoWindowContent += '</ul>';
 
-		infoWindow = new google.maps.InfoWindow({
-			content: infoWindowContent
-		});
+  		infoWindow = new google.maps.InfoWindow({
+  			content: infoWindowContent
+  		});
 
-		google.maps.event.addListener(marker, 'click', function() {
-			infoWindow.open($scope.map,marker);
-		});
+  		google.maps.event.addListener(marker, 'click', function() {
+  			infoWindow.open($scope.map,marker);
+  		});
 
     };
 

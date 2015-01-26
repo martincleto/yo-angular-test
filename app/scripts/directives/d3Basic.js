@@ -12,9 +12,6 @@
 	    	},
 	    	link: function(scope, element, attrs) {
 
-	    		console.log(scope);
-	    		console.log(scope.data);
-
 	    		var data = [],
 	    			selectedCriteria,
 	    			width = 600,
@@ -27,7 +24,7 @@
 		              .append('svg')
 		              .attr('viewBox', '0 0 ' + width + ' ' + height )
 	            	  .attr('preserveAspectRatio', 'xMidYMid meet'),
-	            	xAxis = d3.svg.axis().scale(x);
+	            	xAxis = d3.svg.axis();
 
 		          // watch for data changes and re-render
 		          scope.$watch('graphData', function() {
@@ -41,7 +38,9 @@
 				    y = d3.scale.linear()
 						    .domain([0, max])
 						    .range([0, height]);
-					xAxis.tickValues(function(d){ return d.name; });
+					xAxis
+					  .scale(x)
+					  .tickValues(function(d,i) { return x(i); });
 
 		            return scope.render(data);
 		          }, true);
@@ -66,17 +65,20 @@
 		                  .duration(400)
 		                  .attr('y', function(d){ return height - y(d[selectedCriteria]); })
 		                  .attr('height', function(d){ return y(d[selectedCriteria]); });
+
 /*
 		            svg.append('g')
-					    .attr('class', 'x axis')
-					    .attr('transform', 'translate(0,' + height + ')')
-					    .call(xAxis)
-					  .selectAll('text')
-					    .attr('y', 0)
-					    .attr('x', 9)
-					    .attr('dy', '.35em')
-					    .attr('transform', 'rotate(90)')
-					    .style('text-anchor', 'start');
+    					  .attr('transform', 'translate(0,0)')
+    					.append('g')
+						    .attr('class', 'x axis')
+						    .attr('transform', 'translate(0,' + height + ')')
+						    .call(xAxis)
+						  .selectAll('text')
+						    .attr('y', 0)
+						    .attr('x', 9)
+						    .attr('dy', '.35em')
+						    .attr('transform', 'rotate(90)')
+						    .style('text-anchor', 'start');
 */
 		         };
 	        }

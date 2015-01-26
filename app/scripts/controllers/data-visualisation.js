@@ -18,19 +18,39 @@ angular.module('yoAngularTestApp')
   	$scope.selectedCriteria = 'population';
 
     if (angular.equals({}, $localstorage.getObject('countries'))) {
-  		$http.get('http://restcountries.eu/rest/v1/all').success(function(response){
-	        $scope.countries = response;
-	        $localstorage.setObject('countries',$scope.countries);
-	    });
-  	}
-  	else {
-  		$scope.countries = $localstorage.getObject('countries');
-  		dataCountriesLoaded.resolve();
-  	}
+      oboe('http://restcountries.eu/rest/v1/all')
+        .node('{name capital area population latlng}',function(countryNode){
+          return new Country(
+            countryNode.name,
+            countryNode.capital,
+            countryNode.area,
+            countryNode.population,
+            countryNode.latlng
+          );
+        })
+        .done(function(parsedJson){
+          $scope.countries = parsedJson;
+          $localstorage.setObject('countries',$scope.countries);
+          dataCountriesLoaded.resolve();
+
+        });
+    }
+    else {
+      $scope.countries = $localstorage.getObject('countries');
+      dataCountriesLoaded.resolve();
+    }
 
   	dataCountriesLoaded.promise.then(function(){
   		$scope.filterData();
   	});
+
+    function Country(name, capital, area, population, latlng){
+      this.name = name;
+      this.capital = capital;
+      this.area = area;
+      this.population = population;
+      this.latlng = latlng;
+    }
 
   	$scope.filterData = function() {
   		$scope.countries.sort(function(a,b){
